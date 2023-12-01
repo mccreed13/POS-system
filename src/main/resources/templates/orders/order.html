@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+</head>
+<body>
+    <div>
+        <h2 th:text="'Table - ' + ${order.tableId}"></h2>
+        <h2 th:text="'Total cost - ' + ${order.bill}"></h2>
+        <h2 th:text="'People' + ${order.people}"></h2>
+        <h2 th:text="'Payed - ' +${order.isPayed}"></h2>
+    </div>
+    <div th:unless="${order.isPayed}">
+        <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
+            <input type="hidden" name="strategy" th:value="card">
+            <button type="submit">Pay by card</button>
+        </form>
+        <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
+            <input type="hidden" name="strategy" th:value="cash">
+            <button type="submit">Pay by cash</button>
+        </form>
+    </div>
+    <div th:if="${order.isPayed}">
+        <h2>Paid</h2>
+        <a>Close</a>
+    </div>
+</body>
+</html>

@@ -10,16 +10,16 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "waiter")
-public class Waiter{
+@Table(name = "\"user\"")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Length(max = 50)
-    @Column(name = "name")
+    @Column(name = "username")
     private String name;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "user")
     private List<Order> order;
 }

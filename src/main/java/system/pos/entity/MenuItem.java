@@ -7,11 +7,13 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "menu_item")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "menuItem")
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +26,9 @@ public class MenuItem {
     private String description;
 
     private boolean status;
+
+    @OneToMany(mappedBy = "menuItem")
+    private Set<OrderMenuItems> orderMenuItems;
 }
+
+
