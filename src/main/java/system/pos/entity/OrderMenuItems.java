@@ -35,4 +35,9 @@ public class OrderMenuItems {
     @JoinColumn(name = "total_price")
     @NonNull
     private double totalPrice;
+
+    @Override
+    public String toString() {
+        return menuItem.getName() + "\t"+quantity+"*"+menuItem.getPrice()+"="+(quantity* menuItem.getPrice());
+    }
 }

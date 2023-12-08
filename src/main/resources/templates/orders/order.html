@@ -5,25 +5,59 @@
     <title>Order</title>
 </head>
 <body>
-    <div>
-        <h2 th:text="'Table - ' + ${order.tableId}"></h2>
-        <h2 th:text="'Total cost - ' + ${order.bill}"></h2>
-        <h2 th:text="'People' + ${order.people}"></h2>
-        <h2 th:text="'Payed - ' +${order.isPayed}"></h2>
-    </div>
-    <div th:unless="${order.isPayed}">
-        <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
-            <input type="hidden" name="strategy" th:value="card">
-            <button type="submit">Pay by card</button>
-        </form>
-        <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
-            <input type="hidden" name="strategy" th:value="cash">
-            <button type="submit">Pay by cash</button>
-        </form>
-    </div>
-    <div th:if="${order.isPayed}">
-        <h2>Paid</h2>
-        <a>Close</a>
-    </div>
+<div>
+    <p th:text="'Table - ' + ${order.tableId}"></p>
+    <p th:text="'Total cost - ' + ${order.bill}"></p>
+    <p th:text="'People ' + ${order.people}"></p>
+    <p th:text="'Payed - ' +${order.isPayed}"></p>
+</div>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item: ${order.orderMenuItems}">
+            <td th:text="${item.menuItem.name}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.menuItem.price}"></td>
+        </tr>
+        <tr>
+            <form method="post" th:action="@{/orders/{id}/add(id=${order.id})}">
+                <input type="hidden" th:value="${order.id}" name="id">
+                <button type="submit">ADD</button>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${order.isPayed}">
+    <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
+        <input type="hidden" name="strategy" th:value="card">
+        <button type="submit">Pay by card</button>
+    </form>
+    <form method="post" th:action="@{/orders/{id}/pay(id=${order.id})}">
+        <input type="hidden" name="strategy" th:value="cash">
+        <button type="submit">Pay by cash</button>
+    </form>
+</div>
+<div th:if="${order.isPayed}">
+    <h2>Paid</h2>
+    <a>Close</a>
+</div>
+<div>
+    <form method="post" th:action="@{/orders/{id}/bill(id=${order.id})}">
+        <input type="hidden" name="type" th:value="print">
+        <button type="submit">Print</button>
+    </form>
+    <form method="post" th:action="@{/orders/{id}/bill(id=${order.id})}">
+        <input type="hidden" name="type" th:value="email">
+        <button type="submit">Send to email</button>
+    </form>
+</div>
 </body>
 </html>
