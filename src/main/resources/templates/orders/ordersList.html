@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
     <div th:if="${orders.empty}">
@@ -21,16 +26,15 @@
                 <tr>
                     <th>Table</th>
                     <th>People</th>
-                    <th>Bill</th>
+                    <th>Total</th>
                     <th colspan="2">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="order: ${orders}">
-                    <td></td>
                     <td th:text="${order.tableId}"></td>
                     <td th:text="${order.people}"></td>
-                    <td th:text="${order.bill}"></td>
+                    <td th:text="${order.getFullCost()}"></td>
                     <td>
                         <a th:href="'/orders/' + ${order.id}">Open</a>
                     </td>
