@@ -3,14 +3,19 @@ package system.pos.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.lang.NonNull;
 
+
 @Entity
-@Table(name = "order_menu_item")
+@Table(name = "order_menu_items")
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderMenuItem {
+@Getter
+@Setter
+public class OrderMenuItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,5 +35,4 @@ public class OrderMenuItem {
     @JoinColumn(name = "total_price")
     @NonNull
     private double totalPrice;
-
 }
