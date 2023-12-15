@@ -2,18 +2,31 @@ package system.pos.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import system.pos.bill.BillFormer;
+import system.pos.command.BillSender;
+import system.pos.command.SendBillType;
 import system.pos.entity.Order;
 import system.pos.entity.OrderMenuItems;
 import system.pos.repository.OrderRepository;
 import system.pos.strategies.PayStrategy;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
+    private final Map<SendBillType, BillSender> map;
+
+    public OrderService(OrderRepository orderRepository, UserService userService, List<BillSender> senderList) {
+        this.orderRepository = orderRepository;
+        this.userService = userService;
+        this.map = senderList.stream().collect(Collectors.toMap(BillSender::getType, Function.identity()));
+    }
 
     public List<Order> listAll(){
        return orderRepository.findAll();
@@ -36,4 +49,10 @@ public class OrderService {
          }
     }
 
+    public void sendBill(SendBillType sendBillType, Long id){
+        BillSender billSender = map.get(sendBillType);
+        Set<OrderMenuItems> orderMenuItems = orderRepository.findById(id).get().getOrderMenuItems();
+        String bill = BillFormer.form(orderMenuItems);
+        billSender.send(bill);
+    }
 }
