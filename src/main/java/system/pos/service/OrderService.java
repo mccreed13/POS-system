@@ -18,8 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+    public double getFullCostOrder(Long id){
+        Order order = getById(id);
+        return order.getFullCost();
+    }
     private final OrderRepository orderRepository;
     private final UserService userService;
+
     private final Map<SendBillType, BillSender> map;
 
     public OrderService(OrderRepository orderRepository, UserService userService, List<BillSender> senderList) {
