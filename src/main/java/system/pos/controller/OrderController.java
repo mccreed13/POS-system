@@ -5,15 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import system.pos.command.SendBillType;
-import system.pos.dto.MenuItemDto;
-import system.pos.entity.MenuItem;
 import system.pos.entity.Order;
 import system.pos.service.MenuItemService;
 import system.pos.service.OrderService;
-import system.pos.service.UserService;
 import system.pos.strategies.PayCard;
 import system.pos.strategies.PayCash;
-import system.pos.strategies.PayStrategy;
 
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +51,12 @@ public class OrderController {
             System.out.println();
             orderService.pay(new PayCard(), order);
         }else {orderService.pay(new PayCash(), order);}
+        return "redirect:/orders/"+id;
+    }
+
+    @PostMapping(value = "/{id}/messages")
+    public String message(@PathVariable Long id){
+        orderService.sendMessages(id);
         return "redirect:/orders/"+id;
     }
 

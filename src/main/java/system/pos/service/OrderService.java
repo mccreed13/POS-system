@@ -7,6 +7,8 @@ import system.pos.command.BillSender;
 import system.pos.command.SendBillType;
 import system.pos.entity.Order;
 import system.pos.entity.OrderMenuItems;
+import system.pos.facade.MenuItemFacade;
+import system.pos.factory.BarFactory;
 import system.pos.repository.OrderRepository;
 import system.pos.strategies.PayStrategy;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
+
     private final UserService userService;
     private final Map<SendBillType, BillSender> map;
 
@@ -28,31 +31,43 @@ public class OrderService {
         this.map = senderList.stream().collect(Collectors.toMap(BillSender::getType, Function.identity()));
     }
 
-    public List<Order> listAll(){
-       return orderRepository.findAll();
+    public List<Order> listAll() {
+        return orderRepository.findAll();
     }
 
-    public Order getById(Long id){
+    public double getFullCostOrder(Long id) {
+        Order order = getById(id);
+        return order.getFullCost();
+    }
+
+    public Order getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow();
         double sum = 0;
-        for (OrderMenuItems o: order.getOrderMenuItems()) {
+        for (OrderMenuItems o : order.getOrderMenuItems()) {
             sum += o.getTotalPrice();
         }
         order.setBill(sum);
         return order;
     }
 
-    public void pay(PayStrategy strategy, Order order){
-         if(strategy.pay(order.getBill())){
-             order.setPayed(true);
-             orderRepository.save(order);
-         }
+    public void pay(PayStrategy strategy, Order order) {
+        if (strategy.pay(order.getBill())) {
+            order.setPayed(true);
+            orderRepository.save(order);
+        }
     }
 
-    public void sendBill(SendBillType sendBillType, Long id){
+    public void sendBill(SendBillType sendBillType, Long id) {
         BillSender billSender = map.get(sendBillType);
         Set<OrderMenuItems> orderMenuItems = orderRepository.findById(id).get().getOrderMenuItems();
         String bill = BillFormer.form(orderMenuItems);
         billSender.send(bill);
+    }
+
+    public void sendMessages(Long id){
+        Set<OrderMenuItems> orderMenuItems = orderRepository.findById(id).get().getOrderMenuItems();
+        for (OrderMenuItems o: orderMenuItems) {
+            MenuItemFacade.sendMessagesToProcess(o);
+        }
     }
 }
