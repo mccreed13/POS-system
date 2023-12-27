@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
+import system.pos.composite.Priced;
 
 
 @Entity
@@ -15,7 +16,7 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class OrderMenuItems {
+public class OrderMenuItems implements Priced {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,5 +40,10 @@ public class OrderMenuItems {
     @Override
     public String toString() {
         return menuItem.getName() + "\t"+quantity+"*"+menuItem.getPrice()+"="+(quantity* menuItem.getPrice());
+    }
+
+    @Override
+    public double getFullCost() {
+        return menuItem.getPrice()*quantity;
     }
 }

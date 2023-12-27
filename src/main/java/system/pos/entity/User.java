@@ -20,6 +20,6 @@ public class User {
     @Column(name = "username")
     private String name;
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> order;
+    @Column(name = "password")
+    private String password;
 }

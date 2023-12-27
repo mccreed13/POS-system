@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import system.pos.composite.Priced;
 
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "orders")
-public class Order {
+public class Order implements Priced {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,4 +41,13 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private Set<OrderMenuItems> orderMenuItems;
+
+    @Override
+    public double getFullCost() {
+        double fullCost = 0;
+        for (OrderMenuItems item: orderMenuItems) {
+            fullCost += item.getFullCost();
+        }
+        return fullCost;
+    }
 }

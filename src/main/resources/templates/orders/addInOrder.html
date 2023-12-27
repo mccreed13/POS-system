@@ -7,7 +7,7 @@
 <body>
     <form method="post" th:action="@{/orders/{id}/add(id=${order.id})}">
         <select>
-            <option th:each="menuI: ${menuItems}" th:text="${menuI.name}">
+            <option th:each="menuI: ${menuItems}" th:text="${menuI.name}" th:value="menuI.id">
         </select>
         <button type="submit">Add</button>
     </form>
